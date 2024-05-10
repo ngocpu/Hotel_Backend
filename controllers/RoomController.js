@@ -1,23 +1,15 @@
 import Room from "../models/Room.js";
-import Hotel from "../models/Hotel.js";
-import { createError } from "../utils/error.js";
 
 export const createRoom = async (req, res, next) => {
-  const hotelId = req.params.hotelid;
-  const newRoom = new Room(req.body);
-
+ 
   try {
-    const savedRoom = await newRoom.save();
-    try {
-      await Hotel.findByIdAndUpdate(hotelId, {
-        $push: { rooms: savedRoom._id },
-      });
-    } catch (err) {
-      next(err);
-    }
-    res.status(200).json(savedRoom);
+    const newRoom = await new Room(req.body);
+    console.log(req.body)
+    const saveRoom  = await newRoom.save();
+    res.status(200).json(saveRoom);
   } catch (err) {
-    next(err);
+    console.log(err);
+    // next(err);
   }
 };
 
@@ -35,30 +27,16 @@ export const updateRoom = async (req, res, next) => {
 };
 export const updateRoomAvailability = async (req, res, next) => {
   try {
-    await Room.updateOne(
-      { "roomNumbers._id": req.params.id },
-      {
-        $push: {
-          "roomNumbers.$.unavailableDates": req.body.dates
-        },
-      }
-    );
+    const {roomId , newStatus} = req.body
+    await Room.updateOne({_id:roomId}, {$set:{status: newStatus}});
     res.status(200).json("Room status has been updated.");
   } catch (err) {
     next(err);
   }
 };
 export const deleteRoom = async (req, res, next) => {
-  const hotelId = req.params.hotelid;
   try {
     await Room.findByIdAndDelete(req.params.id);
-    try {
-      await Hotel.findByIdAndUpdate(hotelId, {
-        $pull: { rooms: req.params.id },
-      });
-    } catch (err) {
-      next(err);
-    }
     res.status(200).json("Room has been deleted.");
   } catch (err) {
     next(err);
@@ -74,7 +52,26 @@ export const getRoom = async (req, res, next) => {
 };
 export const getRooms = async (req, res, next) => {
   try {
-    const rooms = await Room.find();
+    let query = {};
+
+    // Lọc theo số lượng người (nếu có)
+    if (req.query.numGuests) {
+      query.maxPeople = { $gte: req.query.numGuests };
+    }
+
+    // Lọc theo trạng thái của phòng (nếu có)
+    if (req.query.status) {
+      query.status = req.query.status;
+    }
+
+    // Kiểm tra xem có tham số truy vấn nào được truyền vào không
+    if (Object.keys(req.query).length === 0) {
+      const rooms = await Room.find();
+      return res.status(200).json(rooms);
+    }
+
+    // Truy vấn cơ sở dữ liệu và trả về danh sách các phòng phù hợp với điều kiện
+    const rooms = await Room.find(query);
     res.status(200).json(rooms);
   } catch (err) {
     next(err);

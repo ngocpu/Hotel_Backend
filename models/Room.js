@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+
 const Room = new mongoose.Schema(
   {
     title: {
@@ -17,7 +18,14 @@ const Room = new mongoose.Schema(
       type: String,
       required: true,
     },
-    roomNumbers: [{ number: Number, unavailableDates: {type: [Date]}}],
+    imgs:{
+      type:[String],
+    },
+    status:{
+      type:String,
+      require:true,
+      default:"Available"
+    }
   },
   { timestamps: true }
 );

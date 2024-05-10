@@ -1,15 +1,21 @@
 import mongoose from "mongoose";
+
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const User = new mongoose.Schema(
   {
     username: {
       type: String,
-      required: true,
-      unique: true,
+      require: [true, "Please enter your name"],
     },
     email: {
       type: String,
-      required: true,
-      unique: true,
+      require: [true, "Please enter your email"],
+      validate: {
+        validator: function (value) {
+          return emailRegex.test(value);
+        },
+        message:"Please enter the valid email"
+      },
     },
     country: {
       type: String,
@@ -25,11 +31,13 @@ const User = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
+      require: [true, "please enter your password"],
+      minlength:[6, "Password must be at least 6 charactor"],
     },
-    isAdmin: {
-      type: Boolean,
-      default: false,
+    role: {
+      type: String,
+      enum: ["admin", "employee", "user"],
+      default: "user",
     },
   },
   { timestamps: true }
