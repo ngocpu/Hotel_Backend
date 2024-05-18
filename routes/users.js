@@ -1,9 +1,10 @@
 import express from'express'
-import {updateUser, deleteUser, getUser, getUsers} from '../controllers/UserController.js'
+import {updateUser, deleteUser, getUser, getUsers, createUser} from '../controllers/UserController.js'
 import {verifyUser, verifyAdmin} from '../utils/verifyToken.js'
 const router = express.Router();
 //UPDATE
-router.put("/:id", verifyUser, updateUser);
+router.post("/new-user", verifyAdmin, createUser)
+router.put("/:id", verifyUser, verifyAdmin, updateUser);
 
 //DELETE
 router.delete("/:id", verifyUser, verifyAdmin, deleteUser);

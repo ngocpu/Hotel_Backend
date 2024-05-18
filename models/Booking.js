@@ -15,9 +15,13 @@ const BookingSchema = new mongoose.Schema(
       type: Date,
       required: true
     },
-    name: {
+    username: {
       type: String,
       required: true
+    },
+    capacity:{
+      type : Number ,
+      required:true
     },
     paymented: {
       type: Number,

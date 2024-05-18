@@ -55,8 +55,8 @@ export const getRooms = async (req, res, next) => {
     let query = {};
 
     // Lọc theo số lượng người (nếu có)
-    if (req.query.numGuests) {
-      query.maxPeople = { $gte: req.query.numGuests };
+    if (req.query.maxPeople) {
+      query.maxPeople = { $gte: parseInt(req.query.maxPeople) }; // Chuyển đổi thành số nguyên
     }
 
     // Lọc theo trạng thái của phòng (nếu có)

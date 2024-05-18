@@ -8,6 +8,7 @@ import authRoute from './routes/auth.js'
 import roomsRoute from './routes/rooms.js'
 import usersRoute from './routes/users.js'
 import bookingsRoute from './routes/booking.js'
+import paymentRoute from './routes/payment.js'
 const app = express();
 const PORT = 8080;
 
@@ -47,6 +48,7 @@ app.use("/api/v1/auth", authRoute)
 app.use("/api/v1/users",usersRoute)
 app.use("/api/v1/rooms", roomsRoute)
 app.use("/api/v1/bookings", bookingsRoute)
+app.use("/api/v1/payment", paymentRoute)
 
 // de khoi dong server
 app.listen(PORT, () => {

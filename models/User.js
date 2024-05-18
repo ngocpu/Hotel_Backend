@@ -29,10 +29,18 @@ const User = new mongoose.Schema(
     phone: {
       type: String,
     },
+    job_position:{
+      type: String,
+    },
     password: {
       type: String,
       require: [true, "please enter your password"],
       minlength:[6, "Password must be at least 6 charactor"],
+    },
+    status:{
+      type: String,
+      enum:["Active", "Inactive"],
+      default: "Active"
     },
     role: {
       type: String,
